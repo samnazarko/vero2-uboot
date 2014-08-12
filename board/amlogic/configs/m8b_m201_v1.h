@@ -147,6 +147,7 @@
 	"mmcargs=setenv bootargs console=${console} " \
 	"boardname=m8_board\0" \
 	"chipname=8726m8\0" \
+	"get_dt=checkhw\0" \
 	"initrd_high=60000000\0" \
 	"hdmimode=1080p\0" \
 	"cvbsmode=576cvbs\0" \
@@ -243,6 +244,9 @@
         "if mmcinfo; then "\
             "if fatload mmc 0 ${loadaddr} recovery.img; then bootm;fi;"\
         "fi; "\
+        "if usb start 0; then "\
+                "if fatload usb 0 ${loadaddr} udisk_autoscript; then autoscr ${loadaddr}; fi;"\
+        "fi;"\
 	      "if imgread kernel recovery ${loadaddr}; then "\
 	        "bootm; "\
 				"else "\
@@ -336,7 +340,7 @@
 
 #ifdef CONFIG_ACS
 //#define CONFIG_DDR_MODE_AUTO_DETECT	//ddr bus-width auto detection
-//#define CONFIG_DDR_SIZE_AUTO_DETECT	//ddr size auto detection
+#define CONFIG_DDR_SIZE_AUTO_DETECT	//ddr size auto detection
 #endif
 
 //On board DDR capactiy
