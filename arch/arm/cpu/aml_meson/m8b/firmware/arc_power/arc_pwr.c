@@ -265,8 +265,10 @@ void enter_power_down()
 //	while(readl(0xc8100000) != 0x13151719)
 //	{}
 
+//non 32k crystal oscillator platform DONT enter 32k in suspend mode
+#ifndef CONFIG_NON_32K
 	switch_24M_to_32K();
-
+#endif 
 	if(p_arc_pwr_op->power_off_at_32K_1)
 		p_arc_pwr_op->power_off_at_32K_1();
 
@@ -274,8 +276,9 @@ void enter_power_down()
 		p_arc_pwr_op->power_off_at_32K_2();
 
 	// gate off:  bit0: REMOTE;   bit3: UART
+#ifndef CONFIG_NON_32K
 	writel(readl(P_AO_RTI_GEN_CNTL_REG0)&(~(0x8)),P_AO_RTI_GEN_CNTL_REG0);
-
+#endif
 	if(uboot_cmd_flag == 0x87654321)//u-boot suspend cmd flag
 	{
 		if(p_arc_pwr_op->power_off_ddr15)
@@ -311,9 +314,9 @@ void enter_power_down()
 	if(p_arc_pwr_op->power_on_at_32K_1)
 		p_arc_pwr_op->power_on_at_32K_1();
 
-
+#ifndef CONFIG_NON_32K
 	switch_32K_to_24M();
-
+#endif
 
 	// power on even more domains
 	if(p_arc_pwr_op->power_on_at_24M)
