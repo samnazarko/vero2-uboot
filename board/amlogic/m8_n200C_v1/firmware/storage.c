@@ -7,7 +7,7 @@ Header file: arch/arm/include/asm/arch-xx/storage.h
 
 #ifdef CONFIG_ACS
 //partition tables
-struct partitions partition_table[]={
+struct partitions partition_table[MAX_PART_NUM]={
 		{
 			.name = "logo",
 			.size = 32*SZ_1M,
