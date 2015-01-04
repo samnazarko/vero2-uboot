@@ -4,7 +4,9 @@
  **************************************************/
 #ifdef CONFIG_CEC_WAKEUP
 #include <cec_tx_reg.h>
-
+#ifndef NULL
+#define NULL ((void *)0)
+#endif
 
 #ifdef CONFIG_NO_32K_XTAL
 
@@ -43,7 +45,7 @@ int cec_strlen(char *p)
   return i;
 }
 
-void *cec_memcpy(void *memto, const void *memfrom, size_t size)
+void *cec_memcpy(void *memto, const void *memfrom, unsigned int size)
 {
     if((memto == NULL) || (memfrom == NULL))
         return NULL;
