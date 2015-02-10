@@ -500,7 +500,6 @@ unsigned int cec_handler(void)
         	remote_cec_hw_reset();
         }else{
             cec_dbg_prints("TX_other\n");
-
             cec_wr_reg(CEC_RX_MSG_CMD,  RX_ACK_CURRENT);
             cec_wr_reg(CEC_RX_MSG_CMD, RX_NO_OP);
         }

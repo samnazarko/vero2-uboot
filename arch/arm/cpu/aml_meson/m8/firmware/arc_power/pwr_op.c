@@ -730,6 +730,13 @@ unsigned int rn5t618_detect_key(unsigned int flags)
 			break;
 		}
 #endif
+
+	    if((readl(P_AO_RTC_ADDR1) >> 12) & 0x1) {
+            exit_reason = 7;
+			ret = FLAG_WAKEUP_ALARM;
+            break;
+        }
+
 #ifdef CONFIG_CEC_WAKEUP
         if(hdmi_cec_func_config & 0x1){
           cec_handler();	
