@@ -175,5 +175,9 @@ int optimus_work_mode_set(int workmode);
 #endif// #ifdef CONFIG_AML_MESON_8
 int optimus_enable_romboot_skip_boot(void);
 
+//ENV for auto jump into producing 
+#define _ENV_TIME_OUT_TO_AUTO_BURN "identifyWaitTime"
+#define AML_SYS_RECOVERY_PART      "aml_sysrecovery"
+
 #endif//ifndef __OPTIMUS_DOWNLOAD_H__
 
