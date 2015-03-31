@@ -32,7 +32,7 @@
 #define set_reg	aml_write_reg32
 #define get_reg	aml_read_reg32
 
-#ifdef CONFIG_G9TV
+#if defined(CONFIG_G9TV) || defined(CONFIG_G9B)
 #define PP_SAR_ADC_REG0						P_AO_SAR_ADC_REG0
 #define PP_SAR_ADC_CHAN_LIST 			P_AO_SAR_ADC_CHAN_LIST
 #define PP_SAR_ADC_AVG_CNTL				P_AO_SAR_ADC_AVG_CNTL
@@ -137,7 +137,7 @@ enum {
    This value divides the 27Mhz clock to generate an ADC clock.
    A value of 20 for example divides the 27Mhz clock by 21 to generate
    an equivalent 1.28Mhz clock */
-#ifdef CONFIG_G9TV
+#if defined(CONFIG_G9TV) || defined(CONFIG_G9B)
 #define set_clock_src(src) 			set_bits(PP_SAR_CLK, src, 9, 2)
 #define set_clock_divider(div) 	set_bits(PP_SAR_CLK, div, 0, 8)
 #else
@@ -187,7 +187,7 @@ enum {
 #define set_tempsen(val)	set_bits(PP_SAR_ADC_REG3, val, 28, 2)
 
 /* enable/disable  the SAR ADC clock */
-#ifdef CONFIG_G9TV
+#if defined(CONFIG_G9TV) || defined(CONFIG_G9B)
 #define enable_clock()	set_bits(PP_SAR_CLK, 1, 8, 1)
 #define disable_clock()	set_bits(PP_SAR_CLK, 0, 8, 1)
 #else
@@ -257,16 +257,17 @@ enum {
 
 // REG10
 #if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON8
-#ifdef CONFIG_G9TV
+#if defined(CONFIG_G9TV) || defined(CONFIG_G9B)
 #define enable_bandgap()    set_bits(P_AO_SAR_ADC_REG11, 1, 13, 1)
 #define disable_bandgap()   set_bits(P_AO_SAR_ADC_REG11, 0, 13, 1)
-#define set_trimming(x)     set_bits(P_AO_SAR_ADC_REG11, x, 14, 5)
+#define set_trimming(x)     set_bits(P_AO_SAR_ADC_REG11, x, 14, 4)
 #define enable_temp__()     {}
 #define disable_temp__()    {}
 #define enable_temp()       set_bits(P_AO_SAR_ADC_REG11, 1, 19, 1)
 #define disable_temp()      set_bits(P_AO_SAR_ADC_REG11, 0, 19, 1)
 #define select_temp()       set_bits(P_AO_SAR_ADC_REG11, 1, 21, 1)
 #define unselect_temp()     set_bits(P_AO_SAR_ADC_REG11, 0, 21, 1)
+#define set_trimming1(x)     set_bits(P_AO_SAR_ADC_REG11, x, 18, 1)
 #else
 #define enable_bandgap()    set_bits(PP_SAR_ADC_DELTA_10, 1, 10, 1)
 #define disable_bandgap()   set_bits(PP_SAR_ADC_DELTA_10, 0, 10, 1)
@@ -277,8 +278,8 @@ enum {
 #define disable_temp()      set_bits(PP_SAR_ADC_DELTA_10, 0, 26, 1)
 #define select_temp()       set_bits(PP_SAR_ADC_DELTA_10, 1, 27, 1)
 #define unselect_temp()     set_bits(PP_SAR_ADC_DELTA_10, 0, 27, 1)
-#endif
 #define set_trimming1(x)     set_bits(P_HHI_DPLL_TOP_0, x, 9, 1)
+#endif
 #else
 #define enable_bandgap()
 #define disable_bandgap()
