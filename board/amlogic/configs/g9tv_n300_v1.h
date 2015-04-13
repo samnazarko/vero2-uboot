@@ -9,7 +9,6 @@
 #define PWM_F                               6
 #define CONFIG_VDDEE_PWM                    PWM_F
 
-
 // cart type of each port
 #define PORT_A_CARD_TYPE            CARD_TYPE_UNKNOWN
 #define PORT_B_CARD_TYPE            CARD_TYPE_UNKNOWN
@@ -182,7 +181,7 @@
 	"boardname=g9tv_board\0" \
 	"chipname=g9tv\0" \
 	"initrd_high=60000000\0" \
-	"outputmode=1080p\0" \
+	"outputmode=1080p50hz\0" \
 	"bootargs=root=/dev/mmcblk0p2 rw rootfstype=ext3 rootwait init=/init console=ttyS0,115200n8 no_console_suspend \0" \
 	"initargs=root=/dev/mmcblk0p2 rw rootfstype=ext3 rootwait init=/init console=ttyS0,115200n8  no_console_suspend \0" \
     "video_dev=tvout\0" \
@@ -193,7 +192,7 @@
 	"display_layer=osd2\0" \
 	"display_color_fg=0xffff\0" \
 	"display_color_bg=0\0" \
-	"fb_addr=0x15100000\0" \
+	"fb_addr=0x7a000000\0" \
 	"fb_width=1920\0" \
 	"fb_height=1080\0" \
 	"partnum=2\0" \
@@ -229,6 +228,7 @@
     "prepare="\
         "logo size ${outputmode}; video open; video clear; video dev open ${outputmode};"\
         "imgread pic logo bootup ${loadaddr_logo}; "\
+        "osd_reverse_operate; "\
         "bmp display ${bootup_offset}; bmp scale;"\
         "\0"\
 	\

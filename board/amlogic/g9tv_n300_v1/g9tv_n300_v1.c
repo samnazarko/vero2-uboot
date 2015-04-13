@@ -216,6 +216,21 @@ int switch_boot_mode_power(void)
 return 0;
 }
 
+void set_regs_bandwidth(void)
+{
+	aml_write_reg32(P_VPU_VDIN_ASYNC_HOLD_CTRL, 0x80408040);
+	aml_set_reg32_bits(P_VPU_VD1_MMC_CTRL, 1, 12 ,1);		 // 		  arb0
+	aml_set_reg32_bits(P_VPU_VD2_MMC_CTRL, 1, 12 ,1);		 // 		  arb0
+	aml_set_reg32_bits(P_VPU_DI_IF1_MMC_CTRL, 1, 12 ,1);	 // 		  arb0
+	aml_set_reg32_bits(P_VPU_DI_MEM_MMC_CTRL, 0, 12 ,1);	 // 		  arb1
+	aml_set_reg32_bits(P_VPU_DI_INP_MMC_CTRL, 0, 12 ,1);	 // 		  arb1
+	aml_set_reg32_bits(P_VPU_DI_MTNRD_MMC_CTRL, 1, 12 ,1);  // 		  arb0
+	aml_set_reg32_bits(P_VPU_DI_CHAN2_MMC_CTRL, 0, 12 ,1);  // 		  arb1
+	aml_set_reg32_bits(P_VPU_DI_MTNWR_MMC_CTRL, 0, 12 ,1);  // 		  arb1
+	aml_set_reg32_bits(P_VPU_DI_NRWR_MMC_CTRL, 0, 12 ,1);	 // 		  arb1
+	aml_set_reg32_bits(P_VPU_DI_DIWR_MMC_CTRL, 0, 12 ,1);	 // 		  arb1
+}
+
 int switch_boot_mode(void)
 {
 	printf("######### switch_boot_mode ##########\n");
@@ -223,6 +238,7 @@ int switch_boot_mode(void)
 	auto_update_env();
 #endif
 	switch_boot_mode_power();
+	set_regs_bandwidth();
 	return 0;
 }
 
@@ -593,6 +609,26 @@ U_BOOT_CMD(
 	"Meson msr sub-system",
 	" [0...63] - measure clock frequency\n"
 	"          - no clock index will measure all clock"
+);
+
+static int do_osd_reverse_operate(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
+{
+	char *osdReverse = getenv("osd_reverse");
+	if (!strcmp(osdReverse, "all,true"))
+	{
+		writel(readl(P_VIU_OSD2_BLK0_CFG_W0) | 0x30000000,P_VIU_OSD2_BLK0_CFG_W0);
+	}
+	else if (!strcmp(osdReverse, "n"))
+	{
+		writel(readl(P_VIU_OSD2_BLK0_CFG_W0) & 0xcfffffff,P_VIU_OSD2_BLK0_CFG_W0);
+	}
+	return 0;
+}
+
+U_BOOT_CMD(
+	osd_reverse_operate,	2,	0,	do_osd_reverse_operate,
+	"osd_reverse_operate",
+	"osd_reverse_operate\n"
 );
 
 #ifdef CONFIG_SARADC
