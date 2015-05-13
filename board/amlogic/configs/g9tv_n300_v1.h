@@ -228,7 +228,6 @@
     "prepare="\
         "logo size ${outputmode}; video open; video clear; video dev open ${outputmode};"\
         "imgread pic logo bootup ${loadaddr_logo}; "\
-        "osd_reverse_operate; "\
         "bmp display ${bootup_offset}; bmp scale;"\
         "\0"\
 	\
@@ -244,6 +243,7 @@
 		"else if test ${reboot_mode} = factory_reset; then "\
 			"run recovery; "\
 		"else if test ${reboot_mode} = update; then "\
+			"run storeargs; "\
 			"run update; "\
 		"else if test ${reboot_mode} = usb_burning; then "\
 			"run usb_burning; "\

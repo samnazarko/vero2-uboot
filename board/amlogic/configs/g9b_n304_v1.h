@@ -1,17 +1,13 @@
-#ifndef __CONFIG_G9TV_N210_V1_H__
-#define __CONFIG_G9TV_N210_V1_H__
+#ifndef __CONFIG_G9BABY_n302_V1_H__
+#define __CONFIG_G9BABY_n302_V1_H__
 
 #define CONFIG_SECURITYKEY
 //#define TEST_UBOOT_BOOT_SPEND_TIME
 
 #define CONFIG_POWER_SPL
-#define PWM_E                               5
-#define CONFIG_PWM_VCCK_VOLTAGE            1130   //VCCK voltage when boot, must have
-#define CONFIG_VCCK_PWM                     PWM_E
-#define CONFIG_PWM_VDDEE_VOLTAGE            1100   //VDDEE voltage when boot, must have
+#define CONFIG_PWM_VDDEE_VOLTAGE            1070   //VDDEE voltage when boot, must have
 #define PWM_F                               6
 #define CONFIG_VDDEE_PWM                    PWM_F
-
 
 // cart type of each port
 #define PORT_A_CARD_TYPE            CARD_TYPE_UNKNOWN
@@ -40,14 +36,7 @@
 #define CONFIG_SWITCH_BOOT_MODE
 #define CONFIG_POWER_MODE
 
-#define PWRKEY_WAKEUP_FLAGE      0x1234abcd //IR, power key, low power, adapter plug in/out and so on, are all use this flag. 
-
-//Enable Auto update script
-#define CONFIG_AML_AUTOSCRIPT
-//#define SCAN_MMC_PARTITION 4
-#define SCAN_USB_PARTITION 4
-#define AML_AUTOSCRIPT  "aml_autoscript"
-
+#define PWRKEY_WAKEUP_FLAGE 0x1234abcd //IR, power key, low power, adapter plug in/out and so on, are all use this flag.
 
 #define CONFIG_ACS
 #ifdef CONFIG_ACS
@@ -61,25 +50,23 @@
 
 #if CONFIG_AML_V2_USBTOOL
 #define CONFIG_SHA1
-#define CONFIG_AUTO_START_SD_BURNING     1//1 then auto detect whether or not jump into sdc_burning when boot from external mmc card 
-#define CONFIG_SD_BURNING_SUPPORT_LED    1//1 then using led flickering states changing to show burning states when sdcard burning
-#define CONFIG_POWER_KEY_NOT_SUPPORTED_FOR_BURN 1//power key and poweroff can't work
-#define CONFIG_SD_BURNING_SUPPORT_UI     1//have bmp display to indicate burning state when sdcard burning
+#ifdef CONFIG_ACS
+#define CONFIG_TPL_BOOT_ID_ADDR       		(0xD9000000U + 4)//pass boot_id, spl->uboot
+#else
+#define CONFIG_TPL_BOOT_ID_ADDR       		(&reboot_mode)//pass boot_id, spl->uboot
+#endif// #ifdef CONFIG_ACS
 #endif// #if CONFIG_AML_V2_USBTOOL
-
-#define CONFIG_UNIFY_KEY_MANAGE 1
-#define CONFIG_CMD_PWM  1
 
 //Enable storage devices
 #define CONFIG_CMD_NAND  1
 #define CONFIG_VIDEO_AML 1
 #define CONFIG_CMD_BMP 1
 #define CONFIG_VIDEO_AMLTVOUT 1
-#define CONFIG_AML_HDMI_TX  1
+#define CONFIG_AML_HDMI_TX 1
 #define CONFIG_OSD_SCALE_ENABLE 1
+#define CONFIG_OSD_SUPERSCALE_ENABLE 1
 
 #define CONFIG_CMD_CPU_TEMP
-
 //Enable storage devices
 #define CONFIG_CMD_SF    1
 #if defined(CONFIG_CMD_SF)
@@ -88,24 +75,8 @@
 #endif /*CONFIG_CMD_SF*/
 
 //Amlogic SARADC support
-#define CONFIG_SARADC     1
+#define CONFIG_SARADC 1
 #define CONFIG_CMD_SARADC 1
-
-//Enable  saradc wake up for arc 
-//#define CONFIG_SARADC_WAKEUP_FOR_ARC 1
-//#define CONFIG_SARADC_CHANEL_CNT 0
-//#define CONFIG_SARADC_KEY_TOLERANCE 0x14
-//#define CONFIG_SARADC_POWER_UP_KEY_VAL1 0x0
-//#define CONFIG_SARADC_POWER_UP_KEY_VAL2 0xfff
-
-//Enable ir remote wake up for arc 
-#define CONFIG_IR_REMOTE_WAKEUP 1               // enable ir remote for arc  
-#define CONFIG_IR_REMOTE_USE_PROTOCOL 0         // 0:nec  1:duokan  2:Toshiba 3:rca
-#define CONFIG_IR_REMOTE_POWER_UP_KEY_CNT 1
-#define CONFIG_IR_REMOTE_POWER_UP_KEY_VAL1 0xE51AFB04 //amlogic mbox ir --- power
-#define CONFIG_IR_REMOTE_POWER_UP_KEY_VAL2 0xFFFFFFFF
-#define CONFIG_IR_REMOTE_POWER_UP_KEY_VAL3 0xFFFFFFFF
-#define CONFIG_IR_REMOTE_POWER_UP_KEY_VAL4 0xFFFFFFFF
 
 #define CONFIG_EFUSE 1
 //#define CONFIG_MACHID_CHECK 1
@@ -149,33 +120,29 @@
  * Enable CONFIG_MUSB_UDD for Device functionalities.
  */
 /* #define CONFIG_MUSB_UDC		1 */
-#define CONFIG_CMD_USB 1
-#if defined(CONFIG_CMD_USB)
-	#define CONFIG_G9TV_XHCI_BASE		0xc9000000
-	#define CONFIG_G9TV_USB_PHY2_BASE	0xc8022000
-	#define CONFIG_G9TV_USB_PHY3_BASE	0xc8022080
+#define CONFIG_G9B_USBPORT_BASE_A	0xC9100000
+#define CONFIG_G9B_USBPORT_BASE_B	0xC9140000
+#define CONFIG_G9B_USBPORT_BASE_C	0xC9180000
+#define CONFIG_G9B_USBPORT_BASE_D	0xC91c0000
 	#define CONFIG_USB_STORAGE      1
-	#define CONFIG_USB_XHCI 1
-	#define CONFIG_USB_XHCI_AMLOGIC 1
-#endif //#if defined(CONFIG_CMD_USB)
+	#define CONFIG_USB_DWC_OTG_HCD  1
+	#define CONFIG_USB_DWC_OTG_294	1
+#define CONFIG_CMD_USB 1
 
-#define CONFIG_ENABLE_CVBS 1
- 
 #define CONFIG_UCL 1
-#define CONFIG_SELF_COMPRESS 
+#define CONFIG_SELF_COMPRESS
 //#define CONFIG_PREBOOT "mw da004004 80000510;mw c81000014 4000;mw c1109900 0"
 
 #define CONFIG_CMD_AUTOSCRIPT
 
 #define CONFIG_CMD_REBOOT 1
-#define CONFIG_PREBOOT 
+#define CONFIG_PREBOOT
 
 #define  CONFIG_AML_GATE_INIT	1
 
 /* Environment information */
 #define CONFIG_BOOTDELAY	1
 #define CONFIG_BOOTFILE		boot.img
-
 
 #define CONFIG_EXTRA_ENV_SETTINGS \
 	"us_delay_step=1\0" \
@@ -185,8 +152,8 @@
 	"console=ttyS0,115200n8\0" \
 	"bootm_low=0x00000000\0" \
 	"bootm_size=0x80000000\0" \
-	"boardname=g9tv_board\0" \
-	"chipname=g9tv\0" \
+	"boardname=g9baby_board\0" \
+	"chipname=g9baby\0" \
 	"initrd_high=60000000\0" \
 	"hdmimode=1080p\0" \
 	"cvbsmode=576cvbs\0" \
@@ -233,9 +200,9 @@
 		"\0"\
 	"preboot="\
 		"run upgrade_check;"\
-		"run check_rebootmode;"\
 		"run prepare; "\
                 "run storeargs;"\
+                "get_rebootmode; clear_rebootmode; echo reboot_mode=${reboot_mode};" \
                 "run update_key; " \
 		"run switch_bootmode;" \
          "\0"\
@@ -246,7 +213,7 @@
                     "if saradc get_in_range 0 0x50; then echo update by key...; run update; fi;" \
                 "fi;" \
         "\0"\
-   	"update="\
+    "update="\
                 /*first try usb burning, second sdc_burn, third autoscr, last recovery*/\
                 "run usb_burning; "\
                 "if mmcinfo; then "\
@@ -313,10 +280,6 @@
 			"echo no recovery in flash; "\
 		 "fi;\0" \
             \
-    "check_rebootmode="\
-		"get_rebootmode; clear_rebootmode; echo reboot_mode=${reboot_mode};"\
-		"if test ${reboot_mode} = factory_reset; then defenv; fi;\0" \
-    \
             "usb_burning=update 1000\0" \
             "try_auto_burn=update 700 750;\0"\
             "sdc_burning=sdc_burn ${sdcburncfg}\0"
@@ -343,37 +306,40 @@
 
 #else
 
-#define CONFIG_SPI_BOOT 1
-//#define CONFIG_MMC_BOOT
+//#define CONFIG_SPI_BOOT 1
+#define CONFIG_MMC_BOOT
 //#define CONFIG_NAND_BOOT 1
 
 #ifdef CONFIG_NAND_BOOT
 	#define CONFIG_AMLROM_NANDBOOT 1
-#endif 
+#endif
 
 
 #ifdef CONFIG_SPI_BOOT
 	#define CONFIG_ENV_OVERWRITE
 	#define CONFIG_ENV_IS_IN_SPI_FLASH
-	#define CONFIG_CMD_SAVEENV	
+	#define CONFIG_CMD_SAVEENV
 	#define CONFIG_ENV_SECT_SIZE		0x10000
 	#define CONFIG_ENV_OFFSET           0x1f0000
 #elif defined CONFIG_NAND_BOOT
 	#define CONFIG_ENV_IS_IN_AML_NAND
 	#define CONFIG_CMD_SAVEENV
-	#define CONFIG_ENV_OVERWRITE	
+	#define CONFIG_ENV_OVERWRITE
 	#define CONFIG_ENV_OFFSET       0x400000
 	#define CONFIG_ENV_BLOCK_NUM    2
 #elif defined CONFIG_MMC_BOOT
 	#define CONFIG_ENV_IS_IN_MMC
 	#define CONFIG_CMD_SAVEENV
-    #define CONFIG_SYS_MMC_ENV_DEV        0	
-	#define CONFIG_ENV_OFFSET       0x1000000		
+    #define CONFIG_SYS_MMC_ENV_DEV 0
+	#define CONFIG_ENV_OFFSET       0x1000000
 #else
 	#define CONFIG_ENV_IS_NOWHERE    1
 #endif
 
 #endif
+
+//enable auto update env--> defenv;save;
+#define CONFIG_AUTO_UPDATE_ENV 1
 
 //----------------------------------------------------------------------
 //Please set the CPU clock(unit: MHz)
@@ -397,15 +363,15 @@
 //#define CONFIG_PUB_WLWDRDRGLVTWDRDBVT_DISABLE 1
 
 //current DDR clock range (408~804)MHz with fixed step 12MHz
-#define CONFIG_DDR_CLK           792 //792//696 //768  //792// (636)
+#define CONFIG_DDR_CLK           792 //696 //768  //792// (636)
 #define CONFIG_DDR_MODE          CFG_DDR_BUS_WIDTH_32BIT
-#define CONFIG_DDR_CHANNEL_SET   CFG_DDR_TWO_CHANNEL_SWITCH_BIT_12
+#define CONFIG_DDR_CHANNEL_SET   CFG_DDR_ONE_CHANNEL_DDR0_ONLY
 #define  CONFIG_CMD_DDR_TEST
-//On board DDR capacity
+//On board DDR capacity`
 /*DDR capactiy support 512MB, 1GB, 1.5GB, 2GB, 3GB*/
 #define CONFIG_DDR_SIZE          1024 //MB. Legal value: 512, 1024, 1536, 2048, 3072
 #define CONFIG_DDR_BDL_DEBUG
-
+#define CONFIG_DDR_DQS_TUNE_T826_SOC_SZ_N302
 
 #ifdef CONFIG_ACS
 //#define CONFIG_DDR_CHANNEL_AUTO_DETECT	//ddr channel setting auto detect
@@ -424,18 +390,16 @@
 #define CONFIG_ENABLE_WRITE_LEVELING 1
 //#define DDR_SCRAMBE_ENABLE  1
 
-#define CONFIG_SYS_MEMTEST_START      0x10000000  /* memtest works on */      
-#define CONFIG_SYS_MEMTEST_END        0x18000000  /* 0 ... 128 MB in DRAM */  
+#define CONFIG_SYS_MEMTEST_START      0x10000000  /* memtest works on */
+#define CONFIG_SYS_MEMTEST_END        0x18000000  /* 0 ... 128 MB in DRAM */
 #define CONFIG_ENABLE_MEM_DEVICE_TEST 1
 #define CONFIG_NR_DRAM_BANKS	      1	          /* CS1 may or may not be populated */
 
 /* Pass open firmware flat tree*/
 #define CONFIG_OF_LIBFDT	1
-#define CONFIG_DT_PRELOAD	1
 #define CONFIG_SYS_BOOTMAPSZ   PHYS_MEMORY_SIZE       /* Initial Memory map for Linux */
 #define CONFIG_ANDROID_IMG	1
 
-#define CONFIG_CMD_IMGPACK 1
 
 //L1 cache enable for uboot decompress speed up
 #define CONFIG_AML_SPL_L1_CACHE_ON	1
@@ -456,6 +420,7 @@
 
 #define CONFIG_CMD_LOGO
 
+
 /*
 * CPU switch test for uboot
 */
@@ -464,9 +429,9 @@
 
 #if defined(CONFIG_VLSI_EMULATOR)
    #undef CONFIG_DDR_CLK
-   #define CONFIG_DDR_CLK    720
-   #undef CONFIG_DDR_SIZE
-   #define CONFIG_DDR_SIZE   1024
+   #define CONFIG_DDR_CLK    792
+   //#undef CONFIG_DDR_SIZE
+   //#define CONFIG_DDR_SIZE   1024
    #undef CONFIG_BOOTCOMMAND
    #define CONFIG_BOOTCOMMAND "video dev open 1080p;echo Uboot for PXP is run..."
 
@@ -484,5 +449,4 @@
 #endif
 
 #define CONFIG_UBOOT_BUILD_VERSION_INFO 1
-
-#endif //__CONFIG_G9TV_N210_V1_H__
+#endif //__CONFIG_G9BABY_n302_V1_H__

@@ -105,6 +105,11 @@ void *video_hw_init (void)
 	aml_gdev.fg = fg;
 	aml_gdev.bg = bg;
 
+	if (!strcmp(getenv("lcd_reverse"),"1")) {
+		setenv("osd_reverse","all,true");
+		setenv("panel_reverse","1");
+		saveenv();
+	}
 	//different method with other video gdfIndex
 	//if((color_format_index < ARRAY_SIZE(default_color_format_array)) && (default_color_format_array[color_format_index] != INVALID_BPP_ITEM))
 	if((color_format_index < ARRAY_SIZE(default_color_format_array)) && (default_color_format_array[color_format_index].color_index != COLOR_INDEX_NULL))
@@ -484,6 +489,11 @@ int* get_window_axis(void) {
         axis[1] = getenv_int("1080poutputy", 0);
         axis[2] = getenv_int("1080poutputwidth", 1920);
         axis[3] = getenv_int("1080poutputheight", 1080);
+    } else if ((strcmp(mode, "768p50hz") == 0) || (strcmp(mode, "768p60hz") == 0) ){
+        axis[0] = getenv_int("768p_x", 0);
+        axis[1] = getenv_int("768p_y", 0);
+        axis[2] = getenv_int("768p_width", 1366);
+        axis[3] = getenv_int("768p_height", 768);
     } else {
         axis[0] = getenv_int("1080poutputx", 0);
         axis[1] = getenv_int("1080poutputy", 0);

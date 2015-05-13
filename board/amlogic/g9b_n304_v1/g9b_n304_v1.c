@@ -16,16 +16,77 @@
 
 DECLARE_GLOBAL_DATA_PTR;
 
+const char * env_args_reserve[]=
+{
+"480i_x",
+"480i_y",
+"480i_w",
+"480i_h",
+"480p_x",
+"480p_y",
+"480p_w",
+"480p_h",
+"576i_x",
+"576i_y",
+"576i_w",
+"576i_h",
+"576p_x",
+"576p_y",
+"576p_w",
+"576p_h",
+"720p_x",
+"720p_y",
+"720p_w",
+"720p_h",
+"1080i_x",
+"1080i_y",
+"1080i_w",
+"1080i_h",
+"1080p_x",
+"1080p_y",
+"1080p_w",
+"1080p_h",
+"4k2k24hz_x",
+"4k2k24hz_y",
+"4k2k24hz_w",
+"4k2k24hz_h",
+"4k2k25hz_x",
+"4k2k25hz_y",
+"4k2k25hz_w",
+"4k2k25hz_h",
+"4k2k30hz_x",
+"4k2k30hz_y",
+"4k2k30hz_w",
+"4k2k30hz_h",
+"4k2ksmpte_x",
+"4k2ksmpte_y",
+"4k2ksmpte_w",
+"4k2ksmpte_h",
+"4k2k420_x",
+"4k2k420_y",
+"4k2k420_w",
+"4k2k420_h",
+"digitaudiooutput",
+"defaulttvfrequency",
+"has.accelerometer",
+"cecconfig",
+"cvbsmode",
+"hdmimode",
+"outputmode",
+"auto_update_enable",
+"disp.fromleft",
+NULL
+};
 #if defined(CONFIG_CMD_NET)
 /*************************************************
   * Amlogic Ethernet controller operation
-  * 
+  *
   * Note: RTL8211F gbit_phy use RGMII interface
   *
   *************************************************/
 static void setup_net_chip(void)
 {
-  	eth_aml_reg0_t eth_reg0;
+    eth_aml_reg0_t eth_reg0;
 	/*m8b mac clock use externel phy clock(125m/25m/2.5m)
 	 setup ethernet clk need calibrate to configre
 	 setup ethernet pinmux use DIF_TTL_0N/P 1N/P 2N/P 3N/P 4N/P GPIOH(3-9) */
@@ -89,7 +150,7 @@ WRITE_CBUS_REG(PREG_ETHERNET_ADDR0, eth_reg0.d32);// rgmii mode
 }
 
 int board_eth_init(bd_t *bis)
-{   	
+{
     setup_net_chip();
     udelay(1000);
 	extern int aml_eth_init(bd_t *bis);
@@ -124,7 +185,7 @@ int switch_boot_mode(void)
 #endif
 u32 get_board_rev(void)
 {
- 
+
 	return 0x20;
 }
 
@@ -138,10 +199,10 @@ static int  sdio_init(unsigned port)
         case SDIO_PORT_A:
             break;
         case SDIO_PORT_B:
-            //todo add card detect 	
+            //todo add card detect
             setbits_le32(P_PREG_PAD_GPIO5_EN_N,1<<29);//CARD_6
             break;
-        case SDIO_PORT_C:    	
+        case SDIO_PORT_C:
             //enable pull up
             clrbits_le32(P_PAD_PULL_UP_REG3, 0xff<<0);
             break;
@@ -169,13 +230,15 @@ static int  sdio_detect(unsigned port)
         case SDIO_PORT_B:
             setbits_le32(P_PREG_PAD_GPIO2_EN_N,1<<26);//CARD_6
            ret=readl(P_PREG_PAD_GPIO2_I)&(1<<26)?0:1;
-            	
-			if((readl(P_PERIPHS_PIN_MUX_8)&(3<<9))){ //if uart pinmux set, debug board in
-				if(!(readl(P_PREG_PAD_GPIO2_I)&(1<<24))){
+
+			if((readl(P_PERIPHS_PIN_MUX_8)&(3<<9)))
+			    { //if uart pinmux set, debug board in
+				if(!(readl(P_PREG_PAD_GPIO2_I)&(1<<24)))
+				    {
 					printf("sdio debug board detected, sd card with 1bit mode\n");
 		 			sdio_debug_1bit_flag = 1;
 		 		}
-		 		else{ 
+		 		else{
 		 			printf("sdio debug board detected, no sd card in\n");
 		 			sdio_debug_1bit_flag = 0;
 		 			return 1;
@@ -521,6 +584,26 @@ U_BOOT_CMD(
 	"Meson msr sub-system",
 	" [0...63] - measure clock frequency\n"
 	"          - no clock index will measure all clock"
+);
+
+static int do_osd_reverse_operate(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
+{
+	char *osdReverse = getenv("osd_reverse");
+	if (!strcmp(osdReverse,"all,true"))
+	{
+		writel(readl(P_VIU_OSD2_BLK0_CFG_W0) | 0x30000000,P_VIU_OSD2_BLK0_CFG_W0);
+	}
+	else if (!strcmp(osdReverse,"n"))
+	{
+		writel(readl(P_VIU_OSD2_BLK0_CFG_W0) & 0xcfffffff,P_VIU_OSD2_BLK0_CFG_W0);
+	}
+	return 0;
+}
+
+U_BOOT_CMD(
+	osd_reverse_operate,	2,	0,	do_osd_reverse_operate,
+	"osd_reverse_operate",
+	"osd_reverse_operate\n"
 );
 
 #ifdef CONFIG_SARADC
