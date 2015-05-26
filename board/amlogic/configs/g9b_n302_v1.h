@@ -78,6 +78,14 @@
 #define CONFIG_SARADC 1
 #define CONFIG_CMD_SARADC 1
 
+//Enable ir remote wake up for arc
+#define CONFIG_IR_REMOTE_WAKEUP 1               // enable ir remote for arc
+#define CONFIG_IR_REMOTE_USE_PROTOCOL 0         // 0:nec  1:duokan  2:Toshiba 3:rca
+#define CONFIG_IR_REMOTE_POWER_UP_KEY_CNT 3
+#define CONFIG_IR_REMOTE_POWER_UP_KEY_VAL1 0xEF10FE01 //amlogic tv ir --- power
+#define CONFIG_IR_REMOTE_POWER_UP_KEY_VAL2 0xF30CFE01 //amlogic tv ir --- ch+
+#define CONFIG_IR_REMOTE_POWER_UP_KEY_VAL3 0xF20DFE01 //amlogic tv ir --- ch-
+#define CONFIG_IR_REMOTE_POWER_UP_KEY_VAL4 0xFFFFFFFF
 #define CONFIG_EFUSE 1
 //#define CONFIG_MACHID_CHECK 1
 #define CONFIG_CMD_SUSPEND 1
@@ -200,7 +208,10 @@
         "setenv bootargs ${initargs} logo=osd1,${outputmode},loaded panel_reverse=${panel_reverse} osd_reverse=${osd_reverse}\0"\
     \
     "prepare="\
-        "logo size ${outputmode}; video open; video clear; video dev open ${outputmode};"\
+        "logo size ${outputmode};"\
+        "lcd_reverse_operate;"\
+        "video open; video clear;"\
+        "video dev open ${outputmode};"\
         "imgread pic logo bootup ${loadaddr_logo}; "\
         "bmp display ${bootup_offset}; bmp scale;"\
         "\0"\
