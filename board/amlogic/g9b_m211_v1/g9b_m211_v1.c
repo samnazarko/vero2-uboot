@@ -14,6 +14,8 @@
 #include <asm/arch/io.h>
 #endif /*CONFIG_AML_I2C*/
 
+#include <amlogic/gpio.h>
+
 DECLARE_GLOBAL_DATA_PTR;
 
 const char * env_args_reserve[]=
@@ -144,10 +146,13 @@ WRITE_CBUS_REG(PREG_ETHERNET_ADDR0, eth_reg0.d32);// rgmii mode
 	/* setup ethernet mode */
 	CLEAR_CBUS_REG_MASK(HHI_MEM_PD_REG0, (1 << 3) | (1<<2));
 	/* hardware reset ethernet phy : gpioh_4 connect phyreset pin*/
-	CLEAR_CBUS_REG_MASK(PREG_PAD_GPIO3_EN_N, 1 << 23);
-	CLEAR_CBUS_REG_MASK(PREG_PAD_GPIO3_O, 1 << 23);
+//	CLEAR_CBUS_REG_MASK(PREG_PAD_GPIO3_EN_N, 1 << 23);
+//	CLEAR_CBUS_REG_MASK(PREG_PAD_GPIO3_O, 1 << 23);
+//	udelay(2000);
+//	SET_CBUS_REG_MASK(PREG_PAD_GPIO3_O, 1 << 23);
+    amlogic_gpio_direction_output(GPIOZ_6,0);
 	udelay(2000);
-	SET_CBUS_REG_MASK(PREG_PAD_GPIO3_O, 1 << 23);
+	amlogic_gpio_direction_output(GPIOZ_6,1);
 }
 
 int board_eth_init(bd_t *bis)
