@@ -161,7 +161,7 @@
 	"vdac_config=0x10\0" \
 	"initargs=init=/init console=ttyS0,115200n8 no_console_suspend ramoops.mem_address=0x04e00000 ramoops.mem_size=0x100000 ramoops.record_size=0x8000 ramoops.console_size=0x4000\0" \
 	"preloaddtb=imgread dtb boot ${loadaddr}\0" \
-	"video_dev=tvout\0" \
+	"video_dev=panel\0" \
 	"display_width=1920\0" \
 	"display_height=1080\0" \
 	"display_bpp=16\0" \
@@ -228,7 +228,7 @@
                 "fi;\0"\
             \
           "storeargs="\
-                "setenv bootargs ${initargs} cvbsdrv=${cvbs_drv} vdaccfg=${vdac_config} logo=osd1,loaded,${fb_addr},${outputmode},full hdmimode=${hdmimode} cvbsmode=${cvbsmode} androidboot.firstboot=${firstboot} hdmitx=${cecconfig}\0"\
+                "setenv bootargs ${initargs} vdaccfg=${vdac_config} logo=osd1,loaded,${fb_addr},panel androidboot.firstboot=${firstboot} uboot_display=0\0"\
             \
 	"switch_bootmode="\
                 "if test ${reboot_mode} = factory_reset; then "\

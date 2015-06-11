@@ -497,8 +497,10 @@ int board_init(void)
 #if defined(CONFIG_VLSI_EMULATOR)
 		   run_command("video dev open 1080p", 0);
 #endif
-
-
+   // writel(0, P_AO_SECURE_REG1);
+   //set GPIOA_10 to gpio 
+    clrbits_le32(P_AO_SECURE_REG1,((1<<8) | (1<<1)));
+    amlogic_gpio_direction_output(GPIOAO_10,1);
 	return 0;
 }
 
