@@ -205,6 +205,11 @@ endif
 	@echo config command: \"make g9tv_n210_v1_config\"
 
 	@echo =======================================================================
+	@echo The mark in board is "G9TV_N211_V1"
+	@echo config command: \"make g9tv_n211_v1_config\"
+
+	
+	@echo =======================================================================
 	@echo The mark in board is "G9TV_N300_V1"
 	@echo config command: \"make g9tv_n300_v1_config\"
 
